@@ -3,6 +3,11 @@ const mongoose = require('mongoose');
 
 // Define a Mongoose schema for the 'Goal' collection
 const goalSchema = mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
     text: {
         type: String,
         required: [true, 'Please add a text value'], // Ensure the 'text' field is required with a custom error message
