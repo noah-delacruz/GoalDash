@@ -27,6 +27,9 @@ app.use(express.urlencoded({ extended: false }));
 // Middleware: Use the 'goalRoutes' router for handling '/api/goals' endpoints
 app.use('/api/goals', require('./routes/goalRoutes'));
 
+// Middleware: Use the 'userRoutes' router for handling '/api/users' endpoints
+app.use('/api/users', require('./routes/userRoutes'));
+
 // Middleware: Use the 'errorHandler' middleware for handling errors
 app.use(errorHandler);
 
