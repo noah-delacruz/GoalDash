@@ -7,6 +7,7 @@ const router = express.Router();
 // Import userController functions for handling user-related operations
 const { registerUser, loginUser, getMe } = require('../controllers/userController');
 
+// Import protect function for protecting routes
 const { protect } = require('../middleware/authMiddleware')
 
 // Define routes and associate them with the corresponding controller functions
