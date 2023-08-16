@@ -4,12 +4,15 @@ const asyncHandler = require('express-async-handler');
 // Import the Goal model
 const Goal = require('../models/goalModel');
 
+// Import the User model
+const User = require('../models/userModel')
+
 // @desc    Get goals
 // @route   GET /api/goals
 // @access  Private
 const getGoals = asyncHandler(async (req, res) => {
-    // Fetch all goals from the database
-    const goals = await Goal.find();
+    // Fetch all goals for a user from the database
+    const goals = await Goal.find({ user: req.user.id });
     
     // Send a 200 (OK) response with the fetched goals in JSON format
     res.status(200).json(goals);
@@ -28,6 +31,7 @@ const setGoal = asyncHandler(async (req, res) => {
     // Create a new goal in the database with the provided text
     const goal = await Goal.create({
         text: req.body.text,
+        user: req.user.id,
     });
 
     // Send a 200 (OK) response with the newly created goal in JSON format
@@ -45,6 +49,20 @@ const updateGoal = asyncHandler(async (req, res) => {
     if (!goal) {
         res.status(400);
         throw new Error('Goal not found');
+    }
+
+    const user = await User.findById(req.user.id)
+
+    // Check for user
+    if(!user) {
+        res.status(401)
+        throw new Error('User not found')
+    }
+
+    // Make sure the logged in user matches the goal user
+    if(goal.user.toString() !== user.id) {
+        res.status(401)
+        throw new Error('User not authorized')
     }
 
     // Update the goal with the provided data and retrieve the updated goal
@@ -65,6 +83,20 @@ const deleteGoal = asyncHandler(async (req, res) => {
     if (!goal) {
         res.status(400);
         throw new Error('Goal not found');
+    }
+
+    const user = await User.findById(req.user.id)
+
+    // Check for user
+    if(!user) {
+        res.status(401)
+        throw new Error('User not found')
+    }
+
+    // Make sure the logged in user matches the goal user
+    if(goal.user.toString() !== user.id) {
+        res.status(401)
+        throw new Error('User not authorized')
     }
 
     // Delete the goal from the database
