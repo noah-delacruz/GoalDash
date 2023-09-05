@@ -10,7 +10,7 @@ const { errorHandler } = require('./middleware/errorMiddleware');
 const connectDB = require('./config/db');
 
 // Define the port number for the server to listen on
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // Establish a connection to the MongoDB database
 connectDB();
