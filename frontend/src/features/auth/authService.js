@@ -18,6 +18,20 @@ const register = async (userData) => {
     return response.data;
 }
 
+// Function to login a user by sending user data to the server.
+const login = async (userData) => {
+    // Send a POST request to the API with the provided user data.
+    const response = await axios.post(API_URL + 'login', userData);
+
+    // If the response contains data, store the user data in the local storage.
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data));
+    }
+
+    // Return the response data.
+    return response.data;
+}
+
 // Function to log out a user by removing user data from local storage.
 const logout = () => {
     // Remove the 'user' data from local storage to log the user out.
@@ -27,7 +41,8 @@ const logout = () => {
 // Define an object 'authService' with the 'register' and 'logout' functions.
 const authService = {
     register,
-    logout
+    logout,
+    login,
 }
 
 // Export the 'authService' object as the default export of this module.

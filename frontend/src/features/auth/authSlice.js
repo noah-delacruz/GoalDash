@@ -26,6 +26,18 @@ export const register = createAsyncThunk('auth/register', async (user, thunkAPI)
     }
 });
 
+// Define an async action to login a user.
+export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
+    try {
+        // Call the 'login' function from the 'authService'.
+        return await authService.login(user);
+    } catch (error) {
+        // Handle errors and return a rejection value with an error message.
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+});
+
 // Define an async action to log a user out.
 export const logout = createAsyncThunk('auth/logout', async () => {
     // Call the 'logout' function from the 'authService'.
@@ -58,7 +70,24 @@ export const authSlice = createSlice({
                 state.user = action.payload;
             })
             .addCase(register.rejected, (state, action) => {
-                // Update state when the 'register' action is rejected (failed).
+                // Update state when the 'login' action is rejected (failed).
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                state.user = null;
+            })
+            .addCase(login.pending, (state) => {
+                // Update state when the 'login' action is pending.
+                state.isLoading = true;
+            })
+            .addCase(login.fulfilled, (state, action) => {
+                // Update state when the 'login' action is fulfilled (successful).
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.user = action.payload;
+            })
+            .addCase(login.rejected, (state, action) => {
+                // Update state when the 'login' action is rejected (failed).
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
